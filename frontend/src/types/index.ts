@@ -30,3 +30,36 @@ export interface OverviewResponse {
   kpis: KpiItem[];
   records: OperationRecord[];
 }
+
+export interface PlayerRankItem {
+  rank: number;
+  playerId: string;
+  playerName: string;
+  teamName: string;
+  avatar: string;
+  kills: number;
+  survivalTime: number;
+  winRate: number;
+  rankTier: string;
+}
+
+export interface TeamRankItem {
+  rank: number;
+  teamId: string;
+  teamName: string;
+  logo: string;
+  totalKills: number;
+  totalSurvivalTime: number;
+  memberCount: number;
+  winRate: number;
+  rankTier: string;
+}
+
+export interface LeaderboardResponse {
+  seasonName: string;
+  seasonPeriod: string;
+  playerKills: PlayerRankItem[];
+  playerSurvival: PlayerRankItem[];
+  teamKills: TeamRankItem[];
+  teamSurvival: TeamRankItem[];
+}

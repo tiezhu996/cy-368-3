@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { fetchOverview } from "./api/client";
+import { fetchOverview, fetchLeaderboard } from "./api/client";
 import { APP_CODE, APP_NAME } from "./constants/app";
 import { REQUEST_MESSAGES } from "./constants/messages";
-import { createFallbackOverview } from "./state/dashboard";
-import type { OverviewResponse } from "./types";
+import { createFallbackOverview, createFallbackLeaderboard } from "./state/dashboard";
+import type { OverviewResponse, LeaderboardResponse } from "./types";
 import FeatureStrip from "./components/FeatureStrip.vue";
 import MetricGrid from "./components/MetricGrid.vue";
 import OperationsTable from "./components/OperationsTable.vue";
+import SeasonLeaderboard from "./components/SeasonLeaderboard.vue";
 
 const overview = ref<OverviewResponse>(createFallbackOverview());
+const leaderboard = ref<LeaderboardResponse>(createFallbackLeaderboard());
 const notice = ref(REQUEST_MESSAGES.overviewFallback);
 
 function goHealth() {
@@ -19,6 +21,7 @@ function goHealth() {
 onMounted(async () => {
   try {
     overview.value = await fetchOverview();
+    leaderboard.value = await fetchLeaderboard();
     notice.value = "后端服务已联通，当前展示实时接口数据。";
   } catch {
     notice.value = REQUEST_MESSAGES.overviewFallback;
@@ -49,6 +52,14 @@ onMounted(async () => {
         <h2>运营任务流</h2>
         <OperationsTable :records="overview.records" />
       </section>
+      <SeasonLeaderboard
+        :season-name="leaderboard.seasonName"
+        :season-period="leaderboard.seasonPeriod"
+        :player-kills="leaderboard.playerKills"
+        :player-survival="leaderboard.playerSurvival"
+        :team-kills="leaderboard.teamKills"
+        :team-survival="leaderboard.teamSurvival"
+      />
     </section>
   </main>
 </template>
